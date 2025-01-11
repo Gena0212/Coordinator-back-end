@@ -16,7 +16,7 @@ import authorise from "../middleware/auth.js";
 const SALT_ROUNDS = 8;
 
 router.post("/register", async (req, res) => {
-  if (!req.body.name || !req.body.email || !req.body.password) {
+  if (!req.body.firstName || !req.body.lastName || !req.body.email || !req.body.password) {
     return res
       .status(400)
       .json({ msg: "You must provide a name, email and password" });
@@ -28,7 +28,8 @@ router.post("/register", async (req, res) => {
 
     // Create a user record in the database
     const newUserIds = await knex("users").insert({
-      name: req.body.name,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
       email: req.body.email,
       password: hashedPassword, // IMPORTANT: use the hashed password for the password instead of the plain text password
     });
