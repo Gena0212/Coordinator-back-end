@@ -5,7 +5,7 @@ import cors from "cors";
 import cookieParser from 'cookie-parser';
 
 import requestRoutes from "./routes/request.js";
-
+import oauthRoutes from "./routes/oauth.js";
 
 dotenv.config();
 
@@ -15,7 +15,7 @@ app.use(cors());
 app.use(cookieParser());
 
 app.use('/request', requestRoutes);
-
+app.use('/oauth', oauthRoutes)
 
 const port = process.env.PORT || 8000;
 
