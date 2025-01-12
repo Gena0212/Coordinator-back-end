@@ -4,7 +4,6 @@ import { OAuth2Client } from 'google-auth-library';
 
 const router = express.Router();
 
-
 router.post('/', async function(req, res, next) {
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header("Referrer-Policy","no-referrer-when-downgrade");
@@ -24,3 +23,5 @@ router.post('/', async function(req, res, next) {
       
     res.json({url:authorizeUrl})
 })
+
+export default router;
