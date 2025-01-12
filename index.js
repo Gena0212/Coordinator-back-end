@@ -5,7 +5,6 @@ import express from "express";
 import * as dotenv from "dotenv";
 import cors from "cors";
 
-
 dotenv.config();
 
 const app = express();
@@ -28,13 +27,13 @@ const calendar = google.calendar({
   auth: oauth2Client,
 });
 
-app.get("/auth", (req, res) => {
-  const url = oauth2Client.generateAuthUrl({
-    access_type: "offline",
-    scope: scopes,
-  });
-  res.redirect(url);
-});
+// app.get("/auth", (req, res) => {
+//   const url = oauth2Client.generateAuthUrl({
+//     access_type: "offline",
+//     scope: scopes,
+//   });
+//   res.redirect(url);
+// });
 
 app.get("/auth/redirect", async (req, res) => {
   const { tokens } = await oauth2Client.getToken(req.query.code);
