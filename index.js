@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 
 import requestRoutes from "./routes/request.js";
 import oauthRoutes from "./routes/oauth.js";
+import userRoutes from "./routes/users.js";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(cookieParser());
 
 app.use('/request', requestRoutes);
 app.use('/oauth', oauthRoutes)
+app.use("/users", userRoutes);
 
 const port = process.env.PORT || 8000;
 

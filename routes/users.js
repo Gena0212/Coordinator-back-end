@@ -38,6 +38,7 @@ router.post("/register", async (req, res) => {
     const newUser = await knex("users").where({ id: newUserIds[0] }).first();
     res.status(201).json(newUser);
   } catch (error) {
+    console.log(error)
     res.status(500).json({ msg: `Couldn't create new user: ${error.message}` });
   }
 });

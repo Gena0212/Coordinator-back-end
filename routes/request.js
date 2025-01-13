@@ -4,9 +4,13 @@ import { OAuth2Client } from 'google-auth-library';
 
 const router = express.Router();
 
-router.post('/', async function(req, res, next) {
+router.post('/:email', async function(req, res, next) {
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header("Referrer-Policy","no-referrer-when-downgrade");
+
+    const {email} = req.params;
+    console.log('email is', email)
+    console.log(typeof email)
 
     const oAuth2Client = new OAuth2Client(
         process.env.CLIENT_ID,
@@ -18,8 +22,10 @@ router.post('/', async function(req, res, next) {
     const authorizeUrl = oAuth2Client.generateAuthUrl({
             access_type: 'offline',
             scope: 'https://www.googleapis.com/auth/userinfo.profile  openid ',
-            prompt: 'consent'
+            prompt: 'consent',
+            login_hint: email
     });
+    console.log(authorizeUrl)
       
     res.json({url:authorizeUrl})
 })
