@@ -78,6 +78,7 @@ router.post("/login", async (req, res) => {
     // Send the JWT token to the client
     res.json({ authToken: token });
   } catch (error) {
+    console.log(error)
     res.status(400).json({ message: "User not found" });
   }
 });
