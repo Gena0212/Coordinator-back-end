@@ -96,4 +96,16 @@ router.get("/profile", authorise, async (req, res) => {
   }
 });
 
+router.get("/list", authorise, async (req, res) => {
+  try {
+    // The `authorise` middleware added the decoded token to `req.token` so we have the users ID from the JWT token.
+    // Query the DB for a user with that ID.
+    const users = await knex("users");
+
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Can't fetch users list" });
+  }
+});
+
 export default router;
