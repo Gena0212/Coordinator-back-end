@@ -9,8 +9,6 @@ router.post('/:email', async function(req, res, next) {
     res.header("Referrer-Policy","no-referrer-when-downgrade");
 
     const {email} = req.params;
-    console.log('email is', email)
-    console.log(typeof email)
 
     const oAuth2Client = new OAuth2Client(
         process.env.CLIENT_ID,
@@ -25,7 +23,6 @@ router.post('/:email', async function(req, res, next) {
             prompt: 'consent',
             login_hint: email
     });
-    console.log(authorizeUrl)
       
     res.json({url:authorizeUrl})
 })

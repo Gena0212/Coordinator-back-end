@@ -9,6 +9,7 @@ export function up(knex) {
     table.string("lastName").notNullable();
     table.string("email").notNullable().unique();
     table.string("password").notNullable();
+    table.json("events");
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table
       .timestamp("updated_at")

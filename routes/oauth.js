@@ -1,10 +1,16 @@
 import express from "express";
+import initKnex from "knex";
+import knexConfig from "../knexfile.js";
+const knex = initKnex(knexConfig);
 import { google } from "googleapis";
 
 import "dotenv/config";
 import { OAuth2Client } from 'google-auth-library';
+// Custom middleware to check JWT tokens on protected routes
+import authorise from "../middleware/auth.js";
 
 const router = express.Router();
+
 
 const oAuth2Client = new OAuth2Client(
     process.env.CLIENT_ID,
@@ -21,9 +27,7 @@ async function getUserData(access_token) {
 
     const response = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`);
     
-    //console.log('response',response);
     const data = await response.json();
-    console.log('data',data);
 }
 
 router.get('/redirect',  async function(req, res, next) {
@@ -31,22 +35,26 @@ router.get('/redirect',  async function(req, res, next) {
 
     try {
 
-        const r =  await oAuth2Client.getToken(code);
+        const r = await oAuth2Client.getToken(code);
+
         // Make sure to set the credentials on the OAuth2 client.
-        await oAuth2Client.setCredentials(r.tokens);
-        console.log(oAuth2Client)
+        oAuth2Client.setCredentials(r.tokens);
+
         const user = oAuth2Client.credentials;
         await getUserData(oAuth2Client.credentials.access_token);
 
     } catch (error) {
-        console.log('Error logging in with OAuth2 user', err);
+        console.log('Error logging in with OAuth2 user', error);
     }
 
     res.redirect(303, `${process.env.CLIENT_URL}home`);
 
 })
 
-router.get("/events", async (req, res) => {
+router.get("/events", authorise, async (req, res) => {
+
+    const user_id = req.token.id;
+
     try {
       const result = await calendar.events.list({
         calendarId: "primary",
@@ -57,15 +65,15 @@ router.get("/events", async (req, res) => {
       });
   
       const events = result.data.items;
-  
-      
+
+      await knex("users").where('id', user_id).update('events', JSON.stringify(events));
       if (!events || events.length === 0) {
           console.log("No upcoming events found.");
           return;
       } else {
-          console.log(events);
+          console.log('events are there');
       }
-  
+        
       res.send({
         status: 200,
         message: "Events fetched successfully",
