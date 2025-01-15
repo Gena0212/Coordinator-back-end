@@ -76,7 +76,7 @@ router.get("/events", authorise, async (req, res) => {
         
       res.send({
         status: 200,
-        message: "Events fetched successfully",
+        message: "Events added successfully",
       });
   
     } catch (error) {
