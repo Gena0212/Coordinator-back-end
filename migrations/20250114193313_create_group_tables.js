@@ -6,7 +6,6 @@ export function up(knex) {
     return knex.schema.createTable("groups", function (table) {
         table.increments("id").primary();
         table.string("groupName").notNullable();
-        table.json("members").notNullable();
     })
 };
 
