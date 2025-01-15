@@ -16,7 +16,7 @@ router.post('/', authorise, async(req, res) => {
 
     try {
         const newGroupIds = await knex("groups").insert({
-            groupName: req.body.groupName, 
+            name: req.body.groupName, 
             members: groupMembers
         }) 
 

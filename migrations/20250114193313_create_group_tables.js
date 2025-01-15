@@ -6,7 +6,7 @@ export function up(knex) {
     return knex.schema
     .createTable("groups", function (table) {
         table.increments("id").primary();
-        table.string("groupName").notNullable();
+        table.string("name").notNullable();
         table.timestamp("created_at").defaultTo(knex.fn.now());
         table
           .timestamp("updated_at")
@@ -22,7 +22,7 @@ export function up(knex) {
             table
             .integer("user_id")
             .unsigned()
-            .references("user.id")
+            .references("users.id")
             .onUpdate("CASCADE")
             .onDelete("CASCADE");
             table.integer('accept_invite').notNullable();
