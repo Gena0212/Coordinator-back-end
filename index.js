@@ -19,7 +19,7 @@ app.use(cookieParser());
 app.use('/request', requestRoutes);
 app.use('/oauth', oauthRoutes)
 app.use("/users", userRoutes);
-app.use("/group", groupRoutes);
+app.use("/groups", groupRoutes);
 
 
 const port = process.env.PORT || 8000;

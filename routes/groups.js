@@ -39,4 +39,24 @@ router.post('/', authorise, async(req, res) => {
       });
 })
 
+router.get('/', authorise, async (req, res) => {
+    const user_id = req.token.id;
+
+    try {
+        const data = await knex('groups')
+        .join("group_users", "groups.id", "group_users.group_id")
+        .join("users", "group_users.user_id", "users.id")
+        .where('users.id', user_id)
+        .select(
+            "groups.name",
+            "groups.id"
+        )
+        
+        console.log('Data from get groups is', data)
+        res.status(200).json(data);
+    } catch (error) {
+        res.status(400)
+    }
+} )
+
 export default router;
