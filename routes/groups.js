@@ -12,20 +12,31 @@ router.post('/', authorise, async(req, res) => {
 
     const user_id = req.token.id;
     const groupMembers = {...req.body.members, [user_id]:true}
-    console.log(groupMembers)
+    let groupUserData = []
 
-    try {
-        const newGroupIds = await knex("groups").insert({
-            name: req.body.groupName, 
-            members: groupMembers
-        }) 
-
-        const newGroup = await knex("groups").where({id: newGroupIds[0]}).first();
-        console.log(newGroup)
-        res.status(201).json(newGroup)
-    } catch (error) {
-        console.log(error)
+    for (let key in groupMembers){
+        let user = {
+            user_id: key,
+            accept_invite: groupMembers[key]
+        }
+        groupUserData.push(user)
     }
+    
+    knex.transaction(function(trx) {
+        return trx
+        .insert({name: req.body.groupName}, 'id')
+        .into("groups")
+        .then(function(ids) {
+            groupUserData.forEach((member)=>(member.group_id = ids[0]));
+            return trx('group_users').insert(groupUserData);
+        });
+    })
+    .then(function(inserts) {
+        console.log('Transaction completed successfully');
+      })
+    .catch(function(error) {
+        console.error('Transaction failed:', error);
+      });
 })
 
 export default router;
