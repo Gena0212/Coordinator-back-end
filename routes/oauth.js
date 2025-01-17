@@ -66,7 +66,9 @@ router.get("/events", authorise, async (req, res) => {
   
       const events = result.data.items;
 
-      await knex("users").where('id', user_id).update('events', JSON.stringify(events));
+      let eventsToStore = events.map(({id, start, end}) => ({id, start, end}))
+
+      await knex("users").where('id', user_id).update('events', JSON.stringify(eventsToStore));
       if (!events || events.length === 0) {
           console.log("No upcoming events found.");
           return;
