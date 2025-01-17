@@ -33,6 +33,7 @@ router.post("/", authorise, async (req, res) => {
     })
     .then(function (inserts) {
       console.log("Transaction completed successfully");
+      res.status(201).json({ message: "Group added successfully" });
     })
     .catch(function (error) {
       console.error("Transaction failed:", error);
@@ -47,12 +48,28 @@ router.get("/", authorise, async (req, res) => {
       .join("group_users", "groups.id", "group_users.group_id")
       .join("users", "group_users.user_id", "users.id")
       .where("users.id", user_id)
+      .where('accept_invite', 1)
       .select("groups.name", "groups.id");
     res.status(200).json(data);
   } catch (error) {
     res.status(400);
   }
 });
+
+router.delete("/:id", authorise, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const deletedCount = await knex('groups').where("id", id).del();
+
+        if (deletedCount === 0) {
+            return res.status(404).json({ message: "Group not found" });
+        }
+
+        return res.status(204).send();
+    } catch (error) {
+        res.status(500).json({ message: "Server error" });
+    }
+})
 
 router.get("/:id/members", authorise, async (req, res) => {
   const group_id = req.params.id;
