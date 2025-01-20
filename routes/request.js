@@ -16,14 +16,22 @@ router.post('/:email', async function(req, res, next) {
         process.env.REDIRECT_URL
     );
 
-    // Generate the url that will be used for the consent dialog.
-    const authorizeUrl = oAuth2Client.generateAuthUrl({
-            access_type: 'offline',
-            scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar',
-            prompt: 'consent',
-            login_hint: email
-    });
-      
+    try { 
+        // Generate the url that will be used for the consent dialog.
+        const authorizeUrl = oAuth2Client.generateAuthUrl({
+                access_type: 'offline',
+                scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar',
+                prompt: 'consent',
+                login_hint: email
+        });
+    
+        if(!authorizeUrl) {
+            return res.status(404).json({ message: "Error retrieving authorizeUrl" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Server error" });
+    }
+
     res.json({url:authorizeUrl})
 })
 
