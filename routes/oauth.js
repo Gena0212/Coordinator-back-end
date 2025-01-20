@@ -45,6 +45,7 @@ router.get('/redirect',  async function(req, res, next) {
 
     } catch (error) {
         console.log('Error logging in with OAuth2 user', error);
+        res.status(500).json({ message: "Server error" });
     }
 
     res.redirect(303, `${process.env.CLIENT_URL}home`);
@@ -63,7 +64,7 @@ router.get("/events", authorise, async (req, res) => {
         singleEvents: true,
         orderBy: "startTime",
       });
-  
+
       const events = result.data.items;
 
       let eventsToStore = events.map(({id, start, end}) => ({id, start, end}))
@@ -82,7 +83,7 @@ router.get("/events", authorise, async (req, res) => {
       });
   
     } catch (error) {
-      console.error(error);
+        res.status(500).json({ message: "Server Error" });
     }
 });
 
