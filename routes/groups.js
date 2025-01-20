@@ -157,11 +157,13 @@ router.put("/invites/:id", authorise, async (req, res) => {
   const group_id = req.params.id;
 
   const acceptInvite = req.body;
-  if(!acceptInvite.replaceAll(" ", "")){
+  if(!acceptInvite){
     return res.status(400).json({message: `Request body has missing properties`});
   }
 
-  if (acceptInvite !== 1) {
+  console.log(acceptInvite)
+
+  if (acceptInvite.accept_invite !== 1) {
     return res.status(404).json({
       message: `acceptInvite must be equal to 1 to accept the invite`,
     });

@@ -28,11 +28,11 @@ router.post('/:email', async function(req, res, next) {
         if(!authorizeUrl) {
             return res.status(404).json({ message: "Error retrieving authorizeUrl" });
         }
+        res.json({url: authorizeUrl})
     } catch (error) {
         res.status(500).json({ message: "Server error" });
     }
 
-    res.json({url:authorizeUrl})
 })
 
 export default router;
