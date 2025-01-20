@@ -138,7 +138,7 @@ router.put("/invites/:id", authorise, async (req, res) => {
       .where({ "group_users.user_id": user_id })
       .update(acceptInvite);
 
-    res.status(200);
+    res.status(200).json({ message: "Successfully accepted invite" });
   } catch (error) {
     res.status(400);
   }

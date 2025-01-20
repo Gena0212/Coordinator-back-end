@@ -12,14 +12,22 @@ import bcrypt from "bcrypt";
 // Custom middleware to check JWT tokens on protected routes
 import authorise from "../middleware/auth.js";
 
+const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+
 // Used when hashing the users password (more salt rounds = stronger encrpytion)
 const SALT_ROUNDS = 8;
 
 router.post("/register", async (req, res) => {
-  if (!req.body.firstName || !req.body.lastName || !req.body.email || !req.body.password) {
+  if (!req.body.firstName.replaceAll(" ", "") || !req.body.lastName.replaceAll(" ", "") || !req.body.email.replaceAll(" ", "") || !req.body.password.replaceAll(" ", "")) {
     return res
       .status(400)
       .json({ msg: "You must provide a name, email and password" });
+  }
+
+  if (!emailRegex.test(req.body.email)) {
+    return res
+      .status(400)
+      .json({msg: "The email address is not valid." });
   }
 
   try {
@@ -44,10 +52,16 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  if (!req.body.email || !req.body.password) {
+  if (!req.body.email.replaceAll(" ", "") || !req.body.password.replaceAll(" ", "")) {
     return res
       .status(400)
       .json({ msg: "You must provide an email and password" });
+  }
+
+  if (!emailRegex.test(req.body.email)) {
+    return res
+      .status(400)
+      .json({msg: "The email address is not valid." });
   }
 
   try {
@@ -90,7 +104,11 @@ router.get("/profile", authorise, async (req, res) => {
     // Query the DB for a user with that ID.
     const user = await knex("users").where({ id: req.token.id }).first();
 
-    res.json(user);
+    if (!user) {
+      res.status(404).json({ message: "User not found" })
+    }
+
+    res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ message: "Can't fetch user profile" });
   }
@@ -102,7 +120,10 @@ router.get("/list", authorise, async (req, res) => {
     // Query the DB for a user with that ID.
     const users = await knex("users");
 
-    res.json(users);
+    if (!users) {
+      res.status(404).json({ message: "Users not found" })
+    }
+    res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ message: "Can't fetch users list" });
   }
