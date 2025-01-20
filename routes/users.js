@@ -115,10 +115,12 @@ router.get("/profile", authorise, async (req, res) => {
 });
 
 router.get("/list", authorise, async (req, res) => {
+
+  const user_id = req.token.id;
   try {
     // The `authorise` middleware added the decoded token to `req.token` so we have the users ID from the JWT token.
     // Query the DB for a user with that ID.
-    const users = await knex("users");
+    const users = await knex("users").whereNot("users.id", user_id);
 
     if (!users) {
       res.status(404).json({ message: "Users not found" })
