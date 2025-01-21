@@ -48,7 +48,7 @@ router.get('/redirect',  async function(req, res, next) {
         res.status(500).json({ message: "Server error" });
     }
 
-    res.redirect(303, `${process.env.CLIENT_URL}home`);
+    res.redirect(303, `${process.env.CLIENT_URL}/home`);
 
 })
 
