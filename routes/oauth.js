@@ -40,12 +40,12 @@ router.get('/redirect',  async function(req, res, next) {
         // Make sure to set the credentials on the OAuth2 client.
         oAuth2Client.setCredentials(r.tokens);
 
-        const user = oAuth2Client.credentials;
+        // const user = oAuth2Client.credentials;
         await getUserData(oAuth2Client.credentials.access_token);
 
     } catch (error) {
         console.log('Error logging in with OAuth2 user', error);
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: error });
     }
 
     res.redirect(303, `${process.env.CLIENT_URL}/home`);
