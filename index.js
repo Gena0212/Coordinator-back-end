@@ -68,7 +68,7 @@ app.get("/create-event", async (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Hello World");
+  res.send("Hey Gena ;)");
 });
 
 app.listen(port, () => {
