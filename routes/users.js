@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Libraries to create JWT tokens and hash passwords
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 // Custom middleware to check JWT tokens on protected routes
 import authorise from "../middleware/auth.js";
