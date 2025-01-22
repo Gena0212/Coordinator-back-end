@@ -106,7 +106,8 @@ router.get("/:id/members", authorise, async (req, res) => {
         "users.firstName",
         "users.lastName",
         "users.email",
-        "users.events"
+        "users.events", 
+        "group_users.accept_invite"
       );
     if (!data) {
       return res.status(404).json({ message: `Group with id of ${group_id} not found` });
